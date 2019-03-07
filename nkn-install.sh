@@ -173,7 +173,7 @@ function mv_to_nkn_user_home () {
 function add_nkn_crontab() {
     sudo -u nkn echo "# nkn crontab" > conf
     sudo -u nkn echo "* * * * * /home/nkn/$nkn_run_dir/nkn-monitor.sh &" >> conf
-    sudo -u nkn echo "0 */1 * * * * /home/nkn/$nkn_run_dir/nkn-update.sh &" >> conf
+    sudo -u nkn echo "0 */1 * * * /home/nkn/$nkn_run_dir/nkn-update.sh &" >> conf
     sudo -u nkn crontab conf
     sudo rm -f conf
 
