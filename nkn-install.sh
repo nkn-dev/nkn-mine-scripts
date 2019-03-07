@@ -128,19 +128,27 @@ EOF
     cd $current_dir
 }
 
-function auto_update_set() {
-    echo "$nkn_latest_version" > $current_dir/$nkn_run_dir/nkn-version
-
-    
-
-}
-
 function download_chain_data() {
     wget -N https://storage.googleapis.com/nkn-testnet-snapshot/$chain_data.zip
     sleep 1
     unzip $chain_data.zip
     sleep 1
     mv Chain $current_dir/$nkn_run_dir/Chain
+}
+
+function gen_nkn_monitor_and_update () {
+    cd $current_dir/$nkn_run_dir
+
+    echo "$nkn_latest_version" > $current_dir/$nkn_run_dir/nkn-version
+
+    wget https://raw.githubusercontent.com/nkn-dev/nkn-mine-scripts/master/nkn-monitor.sh -O $current_dir/$nkn_run_dir/nkn-monitor.sh
+    wget https://raw.githubusercontent.com/nkn-dev/nkn-mine-scripts/master/nkn-update.sh -O $current_dir/$nkn_run_dir/nkn-update.sh
+
+    chmod +x ./nkn-monitor.sh
+    chmod +x ./nkn-update.sh
+
+    cd $current_dir
+
 }
 
 
@@ -162,23 +170,10 @@ function mv_to_nkn_user_home () {
     sudo chown -R nkn:nkn /home/nkn/$nkn_run_dir
 }
 
-
-function gen_nkn_monitor_and_update () {
-    cd $current_dir/$nkn_run_dir
-
-    wget https://xxx/nkn-monitor.sh -O $current_dir/$nkn_run_dir/nkn-monitor.sh
-    wget https://xxx/nkn-update.sh -O $current_dir/$nkn_run_dir/nkn-update.sh
-
-    chmod +x ./nkn-monitor.sh
-    chmod +x ./nkn-update.sh
-    cd $current_dir
-
-}
-
 function add_nkn_crontab() {
-
     sudo -u nkn echo "# nkn crontab" > conf
     sudo -u nkn echo "* * * * * /home/nkn/$nkn_run_dir/nkn-monitor.sh &" >> conf
+    sudo -u nkn echo "* * * * * /home/nkn/$nkn_run_dir/nkn-update.sh &" >> conf
     sudo -u nkn crontab conf
     sudo rm -f conf
 
@@ -207,7 +202,7 @@ download_nkn_latest
 initConfig
 initWallet
 download_chain_data
-gen_nkn_monitor
+gen_nkn_monitor_and_update
 
 
 create_nkn_user
