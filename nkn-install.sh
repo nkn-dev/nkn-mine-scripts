@@ -179,6 +179,11 @@ function add_nkn_crontab() {
 
 }
 
+function clean_clear() {
+    rm -rf $current_dir/$nkn_zip_name.zip
+    rm -rf $current_dir/$chain_data.zip
+}
+
 # get script run dir
 check_current_dir
 
@@ -201,11 +206,17 @@ check_nkn_latest_version
 download_nkn_latest
 initConfig
 initWallet
-download_chain_data
+
+if [ "$2" -eq "1" ]
+then
+  download_chain_data
+fi
+
+clean_clear
+
+
 gen_nkn_monitor_and_update
-
-
 create_nkn_user
-
 mv_to_nkn_user_home
 add_nkn_crontab
+clean_clear
