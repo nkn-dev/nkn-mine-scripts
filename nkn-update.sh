@@ -54,10 +54,14 @@ function check_nkn_latest_version() {
 
 function do_nkn_update() {
 
-    wget -N https://github.com/nknorg/nkn/releases/download/$nkn_latest_version/$nkn_zip_name.zip
+    cd $nkn_run_dir
+
+    wget https://github.com/nknorg/nkn/releases/download/$nkn_latest_version/$nkn_zip_name.zip
     sleep 1
     unzip $nkn_zip_name.zip
     sleep 1
+
+    echo $nkn_run_dir/$nkn_zip_name
 
     if [ -d "$nkn_run_dir/$nkn_zip_name" ]
     then
